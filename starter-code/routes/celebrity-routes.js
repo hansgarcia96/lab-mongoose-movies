@@ -12,7 +12,7 @@ router.get("/celebrities/new", (req, res, next) => {
   res.render("celebrities/new-celebrity");
 });
 
-// POST - NEW CELEBRITY 
+// POST - NEW CELEBRITY
 router.post("/celebrities/create", (req, res, next) => {
   console.log("THE FORM ", req.body);
   Celebrity.create(req.body)
@@ -44,6 +44,30 @@ router.get("/celebrities/celebrity-details/:id", (req, res, next) => {
     });
 });
 
+// POST - DELETE THE CELEBRITY
+router.post("/celebrities/:id/destroy", (req, res, next) => {
+  const id = req.params.id;
 
+  Celebrity
+    .findByIdAndDelete(id)
+    .then(() => {
+      res.redirect("/celebrities");
+    })
+    .catch(err => {
+      next(err);
+    });
+});
+
+// GET - RECEIVE THE CELEBRITY TO EDIT
+router.get("/celebrities/edit/:id", (req, res, next) => {
+  Celebrity
+    .findById(req.params.id)
+    .then((result) => {
+      res.render("celebrities/edit-celebrity", {theCelebrity: result})
+    })
+    .catch((err) => {
+      next(err)
+    })
+})
 
 module.exports = router;
