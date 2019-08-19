@@ -1,9 +1,6 @@
-// routes/auth-routes.js
 const express = require("express");
 const router = express.Router();
-
-// User model
-const User = require("../models/user");
+const User = require("../models/User");
 
 // Bcrypt to encrypt passwords
 const bcrypt = require("bcrypt");

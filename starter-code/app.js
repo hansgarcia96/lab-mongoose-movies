@@ -83,11 +83,12 @@ passport.deserializeUser((id, cb) => {
 });
 
 app.use(flash());
+
 passport.use(
   new LocalStrategy(
-    {
-      passReqToCallback: true
-    },
+    // {
+    //   passReqToCallback: true
+    // },
     (req, username, password, next) => {
       User.findOne({ username }, (err, user) => {
         if (err) {
