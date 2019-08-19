@@ -86,9 +86,9 @@ app.use(flash());
 
 passport.use(
   new LocalStrategy(
-    // {
-    //   passReqToCallback: true
-    // },
+    {
+      passReqToCallback: true
+    },
     (req, username, password, next) => {
       User.findOne({ username }, (err, user) => {
         if (err) {
@@ -110,6 +110,13 @@ passport.use(
 // INITIALIZE PASSPORT AND PASSPORT SESSION
 app.use(passport.initialize());
 app.use(passport.session());
+
+app.use((req, res, next) => {
+  res.locals.currentUser = req.user;
+  res.locals.errorMessage = req.flash("error");
+  res.locals.successMessage = req.flash("success");
+  next();
+});
 
 // CELEBRITY ROUTE
 const celebrityRoutes = require("./routes/celebrity-routes");

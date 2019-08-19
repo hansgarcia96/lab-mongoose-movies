@@ -1,7 +1,23 @@
 <h1>{{title}}</h1>
 <p>Welcome to {{title}}</p>
 
+
+
 <nav>
+    {{#if currentUser}}
+    <h3>Hello, {{currentUser.username}}</h3>
+
+    <form action="/logout" method="POST">
+        <button>LOGOUT</button>
+    </form>
+
+    {{else}}
+    <a href="/login">LOGIN</a>
+
+    <a href="/signup">SIGNUP</a>
+
+    {{/if}}
+
     <a href="/celebrities/new">NEW CELEBRITY</a>
 
     <a href="/celebrities">LIST OF CELEBRITIES</a>
@@ -10,7 +26,8 @@
 
     <a href="/movies">LIST OF MOVIES</a>
 
-    <a href="/login">Login</a>
 
-    <a href="/signup">Signup</a>
+
+
+
 </nav>
