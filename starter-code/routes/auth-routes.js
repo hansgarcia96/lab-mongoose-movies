@@ -7,6 +7,8 @@ const bcrypt = require("bcrypt");
 const bcryptSalt = 10;
 const passport = require("passport");
 
+const ensureLogin = require("connect-ensure-login");
+
 router.get("/signup", (req, res, next) => {
   res.render("auth/signup");
 });
@@ -62,8 +64,6 @@ router.post(
   })
 );
 
-const ensureLogin = require("connect-ensure-login");
-
 router.get("/private-page", ensureLogin.ensureLoggedIn(), (req, res) => {
   res.render("private", { user: req.user });
 });
@@ -85,6 +85,14 @@ router.post(
 router.get("/logout", (req, res) => {
   req.logout();
   res.redirect("/login");
+});
+
+router.get("/secret", (req, res, next) => {
+  if (!req.user) {
+    req.flash("error", "please log in to view the secret page");
+    res.redirect("/login");
+  }
+  res.render("secret");
 });
 
 module.exports = router;
