@@ -1,21 +1,19 @@
-<h2>The Celebrities are: </h2>
+<h2>CELEBRITIES</h2>
 
 <div>
 
-
   {{#each celebrities}}
-  <a href="/celebrities/celebrity-details/{{ this._id }}">
-    <h3> {{ this.name }} </h3>
-  </a>
+  <div class="card">
+    <a href="/celebrities/celebrity-details/{{ this._id }}">
+      <h3> {{ this.name }} </h3>
+    </a>
 
-  <a href="/celebrities/edit/{{ this._id}}">Edit this Celebrity</a>
+    <a href="/celebrities/edit/{{ this._id}}">EDIT</a>
 
-  <form action="/celebrities/{{this._id}}/destroy" method="POST">
-    <button>Delete</button>
-  </form>
-
-
-
+    <form action="/celebrities/{{this._id}}/destroy" method="POST">
+      <button>DELETE</button>
+    </form>
+  </div>
   {{/each}}
 
 </div>

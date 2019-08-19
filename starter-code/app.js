@@ -9,6 +9,15 @@ const mongoose = require("mongoose");
 const logger = require("morgan");
 const path = require("path");
 
+const session = require("express-session");
+const passport = require("passport");
+const LocalStrategy = require("passport-local").Strategy;
+
+const bcrypt = require("bcrypt");
+const User = require("./models/User");
+const flash = require("connect-flash");
+
+mongoose.Promise = Promise;
 mongoose
   .connect("mongodb://localhost/undefined", { useNewUrlParser: true })
   .then(x => {
@@ -34,7 +43,6 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 // Express View engine setup
-
 app.use(
   require("node-sass-middleware")({
     src: path.join(__dirname, "public"),
@@ -51,13 +59,67 @@ app.use(favicon(path.join(__dirname, "public", "images", "favicon.ico")));
 // default value for title local
 app.locals.title = "Mongoose Movies";
 
+// PASSPORT MIDDLEWARE
+app.use(
+  session({
+    secret: "our-passport-local-strategy-app",
+    resave: true,
+    saveUninitialized: true
+  })
+);
+
+// PASSPORT STRATEGY
+passport.serializeUser((user, cb) => {
+  cb(null, user._id);
+});
+
+passport.deserializeUser((id, cb) => {
+  User.findById(id, (err, user) => {
+    if (err) {
+      return cb(err);
+    }
+    cb(null, user);
+  });
+});
+
+app.use(flash());
+passport.use(
+  new LocalStrategy(
+    {
+      passReqToCallback: true
+    },
+    (req, username, password, next) => {
+      User.findOne({ username }, (err, user) => {
+        if (err) {
+          return next(err);
+        }
+        if (!user) {
+          return next(null, false, { message: "Incorrect username" });
+        }
+        if (!bcrypt.compareSync(password, user.password)) {
+          return next(null, false, { message: "Incorrect password" });
+        }
+
+        return next(null, user);
+      });
+    }
+  )
+);
+
+// INITIALIZE PASSPORT AND PASSPORT SESSION
+app.use(passport.initialize());
+app.use(passport.session());
+
+// CELEBRITY ROUTE
 const celebrityRoutes = require("./routes/celebrity-routes");
 app.use("/", celebrityRoutes);
 
-// const movieRoutes = require("./routes/movie-routes");
-// app.use("/", movieRoutes);
+// MOVIE ROUTE
+const movieRoutes = require("./routes/movie-routes");
+app.use("/", movieRoutes);
 
-// app.use("/", require("./routes/celebrities-routes"));
-// app.use("/", require("./routes/movie-routes"));
+// AUTH ROUTE
+const authRoutes = require("./routes/auth-routes");
+app.use("/", authRoutes);
 
 module.exports = app;

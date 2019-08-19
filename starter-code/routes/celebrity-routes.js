@@ -48,8 +48,7 @@ router.get("/celebrities/celebrity-details/:id", (req, res, next) => {
 router.post("/celebrities/:id/destroy", (req, res, next) => {
   const id = req.params.id;
 
-  Celebrity
-    .findByIdAndDelete(id)
+  Celebrity.findByIdAndDelete(id)
     .then(() => {
       res.redirect("/celebrities");
     })
@@ -60,14 +59,30 @@ router.post("/celebrities/:id/destroy", (req, res, next) => {
 
 // GET - RECEIVE THE CELEBRITY TO EDIT
 router.get("/celebrities/edit/:id", (req, res, next) => {
-  Celebrity
-    .findById(req.params.id)
-    .then((result) => {
-      res.render("celebrities/edit-celebrity", {theCelebrity: result})
+  Celebrity.findById(req.params.id)
+    .then(result => {
+      res.render("celebrities/edit-celebrity", { theCelebrity: result });
     })
-    .catch((err) => {
-      next(err)
+    .catch(err => {
+      next(err);
+    });
+});
+
+// POST - CELEBRITY TO EDIT
+router.post("/celebrities/edit/:id", (req, res, next) => {
+  const id = req.params.id;
+
+  Celebrity.findByIdAndUpdate(id, {
+    name: req.body.name,
+    occupation: req.body.occupation,
+    catchPhrase: req.body.catchPhrase
+  })
+    .then(result => {
+      res.redirect("/celebrities/celebrity-details/" + id);
     })
-})
+    .catch(err => {
+      next(err);
+    });
+});
 
 module.exports = router;
