@@ -92,7 +92,7 @@ router.get("/secret", (req, res, next) => {
     req.flash("error", "please log in to view the secret page");
     res.redirect("/login");
   }
-  res.render("secret");
+  res.render("secret-page");
 });
 
 module.exports = router;

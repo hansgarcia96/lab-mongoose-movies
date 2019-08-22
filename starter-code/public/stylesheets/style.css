@@ -1,11 +1,9 @@
 body {
   padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
-}
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif; }
 
 a {
-  color: #00b7ff;
-}
+  color: #00b7ff; }
 
 .card {
   display: flex;
@@ -16,7 +14,6 @@ a {
   border: 1px solid black;
   border-radius: 4px;
   padding: 20px;
-  text-align: center;
-}
+  text-align: center; }
 
 /*# sourceMappingURL=style.css.map */
